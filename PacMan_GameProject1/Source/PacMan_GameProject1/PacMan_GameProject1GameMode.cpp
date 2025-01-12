@@ -62,10 +62,11 @@ void APacMan_GameProject1GameMode::EndGame()
 		if (PlayerController)
 		{
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
-			PlayerController->bShowMouseCursor = true;
 			FInputModeUIOnly InputMode;
 			InputMode.SetWidgetToFocus(GameOverWidget->TakeWidget());
 			PlayerController->SetInputMode(InputMode);
+			PlayerController->bShowMouseCursor = true;
+
 		}
 	}
 }
