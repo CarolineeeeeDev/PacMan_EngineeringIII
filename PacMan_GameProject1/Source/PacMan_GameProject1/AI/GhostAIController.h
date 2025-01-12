@@ -6,9 +6,6 @@
 #include "AIController.h"
 #include "GhostAIController.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class PACMAN_GAMEPROJECT1_API AGhostAIController : public AAIController
 {

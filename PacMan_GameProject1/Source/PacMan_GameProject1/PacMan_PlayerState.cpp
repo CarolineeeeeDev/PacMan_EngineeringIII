@@ -2,6 +2,9 @@
 
 
 #include "PacMan_PlayerState.h"
+#include "Kismet/GameplayStatics.h"
+#include "PacMan_GameProject1GameMode.h"
+
 
 APacMan_PlayerState::APacMan_PlayerState()
 {
@@ -18,7 +21,12 @@ void APacMan_PlayerState::DecreasePower(int32 Amount)
 	Power -= Amount;
 	if (Power <= 0)
 	{
-		//EndGame
+		APacMan_GameProject1GameMode* GameMode = Cast<APacMan_GameProject1GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+		if (GameMode)
+		{
+			GameMode->EndGame();
+		}
 	}
 }
 

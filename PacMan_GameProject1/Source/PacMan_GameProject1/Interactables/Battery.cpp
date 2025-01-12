@@ -3,6 +3,10 @@
 
 #include "Battery.h"
 #include "../PacMan_PlayerState.h"
+#include "../PacMan_GameProject1GameMode.h"
+
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 ABattery::ABattery()
@@ -33,9 +37,12 @@ void ABattery::OverlapWithPlayer()
         if (PlayerState)
         {
             APacMan_PlayerState* PacManPlayerState = Cast<APacMan_PlayerState>(PlayerState);
+            APacMan_GameProject1GameMode* GameMode = Cast<APacMan_GameProject1GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
             if (PacManPlayerState)
             {
                 PacManPlayerState->IncreasePower(PowerIncreaseAmount);
+                GameMode->RemainingBatteries -= 1;
+                if (GameMode->RemainingBatteries <= 0) GameMode->WinGame();
             }
             else
             {

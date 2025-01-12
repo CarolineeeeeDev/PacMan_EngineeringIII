@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -14,24 +12,32 @@ class APacMan_GameProject1GameMode : public AGameModeBase
 public:
 	APacMan_GameProject1GameMode();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
+	FTimerHandle PowerDecrementTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	int32 PowerDecrementRate;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	int32 RemainingBatteries;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	TSubclassOf<class UUserWidget> GameOverUIClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	TSubclassOf<class UUserWidget> WinGameUIClass;
 
 	UPROPERTY()
 	class UUserWidget* GameOverWidget;
+	UPROPERTY()
+	class UUserWidget* WinGameWidget;
 
-	FTimerHandle PowerDecrementTimerHandle;
+	UFUNCTION()
+	void DecreasePower(); //Power decreases as time passes
 
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable)
 	void EndGame();
-
-	UFUNCTION()
-	void DecreasePower();
+	void WinGame();
 };
 
 

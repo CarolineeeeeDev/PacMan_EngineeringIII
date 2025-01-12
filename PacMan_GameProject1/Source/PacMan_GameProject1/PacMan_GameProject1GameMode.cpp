@@ -4,6 +4,7 @@
 #include "PacMan_GameProject1Character.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 #include "PacMan_PlayerState.h"
 
 APacMan_GameProject1GameMode::APacMan_GameProject1GameMode()
@@ -14,7 +15,7 @@ APacMan_GameProject1GameMode::APacMan_GameProject1GameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 	PlayerStateClass = APacMan_PlayerState::StaticClass();
-	PowerDecrementRate = 1;
+	PowerDecrementRate = 3;
 }
 
 void APacMan_GameProject1GameMode::BeginPlay()
@@ -26,6 +27,10 @@ void APacMan_GameProject1GameMode::BeginPlay()
 	if (GameOverUIClass)
 	{
 		GameOverWidget = CreateWidget<UUserWidget>(GetWorld(), GameOverUIClass);
+	}
+	if (WinGameUIClass)
+	{
+		WinGameWidget = CreateWidget<UUserWidget>(GetWorld(), WinGameUIClass);
 	}
 }
 
@@ -41,7 +46,7 @@ void APacMan_GameProject1GameMode::DecreasePower()
 		}
 		else
 		{
-			EndGame();
+			EndGame(); //Fail the game
 		}
 	}
 }
@@ -53,5 +58,33 @@ void APacMan_GameProject1GameMode::EndGame()
 	if (GameOverWidget)
 	{
 		GameOverWidget->AddToViewport();
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PlayerController)
+		{
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+			PlayerController->bShowMouseCursor = true;
+			FInputModeUIOnly InputMode;
+			InputMode.SetWidgetToFocus(GameOverWidget->TakeWidget());
+			PlayerController->SetInputMode(InputMode);
+		}
+	}
+}
+
+void APacMan_GameProject1GameMode::WinGame()
+{
+	GetWorld()->GetTimerManager().ClearTimer(PowerDecrementTimerHandle);
+
+	if (WinGameWidget)
+	{
+		WinGameWidget->AddToViewport();
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PlayerController)
+		{
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+			PlayerController->bShowMouseCursor = true;
+			FInputModeUIOnly InputMode;
+			InputMode.SetWidgetToFocus(WinGameWidget->TakeWidget());
+			PlayerController->SetInputMode(InputMode);
+		}
 	}
 }

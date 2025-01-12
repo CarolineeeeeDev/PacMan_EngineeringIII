@@ -89,8 +89,6 @@ void AGhostPacMan::SwitchTargetPoint()
 {
     if (CurrentTargetPoint == PatrolPoint1)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Switch"));
-
         CurrentTargetPoint = PatrolPoint2;
     }
     else
